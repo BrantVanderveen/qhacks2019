@@ -13,22 +13,18 @@ class App extends Component {
       inputText: '',
       submitted: false,
       randomData:  [0, (Math.random()*100)-50, (Math.random()*100)-50, (Math.random()*100)-50, (Math.random()*100)-50, (Math.random()*100)-50, (Math.random()*100)-50],
-      response: 'test reponse!'
+      response: ''
      };
   }
   componentDidMount(prevProps, prevState, snapshot) {
     window.addEventListener("keyup", (e)=>{
       var code = e.keyCode || e.which;
-
       if( code === 13 ) {
         e.preventDefault();
         this.attemptSubmit();
         return false;
       }
     });
-    this.callApi()
-      .then(res => this.setState({ response: res.express }))
-      .catch(err => console.log(err));
   }
   callApi = async () => {
     const response = await fetch('/api/hello');
@@ -48,6 +44,7 @@ class App extends Component {
     const body = await response.text();
     this.setState({ responseToPost: body });
   };
+
   addFocus() {
     this.setState({
       focused: true
@@ -70,10 +67,13 @@ class App extends Component {
       randomData:  [0, (Math.random()*100)-50, (Math.random()*100)-50, (Math.random()*100)-50, (Math.random()*100)-50, (Math.random()*100)-50, (Math.random()*100)-50]
     })
     console.log('submitted: ' + this.state.inputText)
-    setTimeout(()=>{
-      setTimeout(()=>{this.setState({submitted: false})}, 1000)
-      this.setState({resultsFound: true, focused: false})
-    }, 3000);
+    this.callApi()
+      .then(res => {
+        this.setState({ response: res.express })
+        this.setState({resultsFound: true, focused: false})
+        setTimeout(()=>{this.setState({submitted: false})}, 1000)
+      })
+      .catch(err => console.log(err));
   }
   render() {
     var loadCSS = css`
@@ -125,7 +125,7 @@ class App extends Component {
         <header className="App-header">
           <img src={logo} className="qhacks-logo" alt="logo" />
           <p className="headertext">
-            SCRAPE TWIT. SMASH TWAT
+            HOW DO YOU FEEL
           </p>
           <div className="contentBox">
             <p className="subheadertext">
