@@ -13,22 +13,18 @@ class App extends Component {
       inputText: '',
       submitted: false,
       randomData:  [0, (Math.random()*100)-50, (Math.random()*100)-50, (Math.random()*100)-50, (Math.random()*100)-50, (Math.random()*100)-50, (Math.random()*100)-50],
-      response: 'test reponse!'
+      response: ''
      };
   }
   componentDidMount(prevProps, prevState, snapshot) {
     window.addEventListener("keyup", (e)=>{
       var code = e.keyCode || e.which;
-
       if( code === 13 ) {
         e.preventDefault();
         this.attemptSubmit();
         return false;
       }
     });
-    this.callApi()
-      .then(res => this.setState({ response: res.express }))
-      .catch(err => console.log(err));
   }
   callApi = async () => {
     const response = await fetch('/api/hello');
@@ -48,6 +44,7 @@ class App extends Component {
     const body = await response.text();
     this.setState({ responseToPost: body });
   };
+
   addFocus() {
     this.setState({
       focused: true
@@ -66,14 +63,17 @@ class App extends Component {
       return false;
     }
     this.setState({
-      submitted: true,
-      randomData:  [0, (Math.random()*100)-50, (Math.random()*100)-50, (Math.random()*100)-50, (Math.random()*100)-50, (Math.random()*100)-50, (Math.random()*100)-50]
+      submitted: true
     })
     console.log('submitted: ' + this.state.inputText)
-    setTimeout(()=>{
-      setTimeout(()=>{this.setState({submitted: false})}, 1000)
-      this.setState({resultsFound: true, focused: false})
-    }, 3000);
+    this.callApi()
+      .then(res => {
+        this.setState({ response: res.express })
+        this.setState({resultsFound: true, focused: false, randomData:  [0, (Math.random()*100)-50, (Math.random()*100)-50, (Math.random()*100)-50, (Math.random()*100)-50, (Math.random()*100)-50, (Math.random()*100)-50]})
+
+        setTimeout(()=>{this.setState({submitted: false})}, 1000)
+      })
+      .catch(err => console.log(err));
   }
   render() {
     var loadCSS = css`
@@ -125,15 +125,12 @@ class App extends Component {
         <header className="App-header">
           <img src={logo} className="qhacks-logo" alt="logo" />
           <p className="headertext">
-            SCRAPE FAST. EAT ASS.
+            HOW DO YOU FEEL
           </p>
           <div className="contentBox">
             <p className="subheadertext">
               <strong> A powerful sentiment analysis tool </strong> - how does the world feel about your movement, your product, or your company?
               Discover how the world is reacting to anything, from a celebrity's latest antics to a an IPO that's making a splash.
-            </p>
-            <p>
-              {this.state.response}
             </p>
             <div className="inputWrapper">
               <div className="inputPill">
@@ -141,7 +138,7 @@ class App extends Component {
                   className="mainInput"
                   onFocus={() => this.addFocus()}
                   onBlur={() => this.removeFocus()}
-                  onChange={(e)=>this.setState({inputText: e.target.value, submitted: false, resultsFound: false, focused: true})}
+                  onChange={(e)=>this.setState({inputText: e.target.value, submitted: false, focused: true})}
                   onSubmit={()=>this.attemptSubmit()}
                 />
                 <div className={submitState}
