@@ -1,0 +1,123 @@
+.App {
+  text-align: center;
+}
+
+.App-logo {
+  animation: App-logo-spin infinite 20s linear;
+  height: 40vmin;
+}
+
+.App-header {
+  background-color: rgba(226, 255, 214, 0.4);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 10vh;
+  font-size: calc(10px + 2vmin);
+  color: #333;
+}
+
+.headertext {
+  font-size: 30px;
+  letter-spacing: 2px;
+}
+.contentBox {
+    background-color: #fff;
+    width: 80%;
+    padding: 40px;
+    padding-top: 0px;
+    border-radius: 7px;
+    border: 1px solid #ddd;
+    box-shadow: -2px 2px 5px rgba(0,0,0,0.05);
+    margin-bottom: 30px;
+}
+.inputWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.inputPill {
+  width: 75%;
+  height: 50px;
+  border-radius: 25px;
+  background: #eee;
+  border: 1px solid rgba(0,0,0,0);
+  display: flex;
+  overflow: hidden;
+  flex-direction: column;
+  align-items: center;
+  position:relative;
+
+}
+.submitPart {
+  background-color: rgb(47, 150, 3);
+  width: 140px;
+  align-self: flex-end;
+  height: 100%;
+  opacity: .9;
+  transition: opacity 0.5s;
+  display: flex;
+  overflow: hidden;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: rgba(255,255,255,1);
+}
+textarea:focus, input:focus{
+    outline: none;
+}
+.mainInput {
+  position: absolute;
+  left: 15px;
+  height: 100%;
+  border: none !important;
+  background: none;
+  padding-left: 8px;
+  font-size: 20px;
+  width: 100%;
+
+}
+.innerSubmit {
+  margin-top: -3px;
+  letter-spacing: 1px;
+  white-space: nowrap;
+  transition: 0.5s;
+}
+.submitted .innerSubmit {
+  margin-left: 250px;
+}
+.hide {
+  opacity: 0;
+}
+.hideText {
+  color: rgba(255,255,255,0.3);
+}
+.results {
+  max-height: 0px;
+  opacity: 0;
+  display: flex;
+  overflow: hidden;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  transition: max-height 0.8s, opacity 1s;
+  margin-top: 20px;
+}
+.qhacks-logo {
+max-height: 80px;
+
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
