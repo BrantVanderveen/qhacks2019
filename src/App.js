@@ -125,7 +125,7 @@ class App extends Component {
         <header className="App-header">
           <img src={logo} className="qhacks-logo" alt="logo" />
           <p className="headertext">
-            SCRAPE FAST. EAT ASS.
+            SCRAPE TWIT. SMASH TWAT
           </p>
           <div className="contentBox">
             <p className="subheadertext">
