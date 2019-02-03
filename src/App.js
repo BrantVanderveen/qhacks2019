@@ -4,6 +4,8 @@ import './App.css';
 import { HashLoader } from 'react-spinners';
 import { css } from '@emotion/core';
 import { Line } from 'react-chartjs-2';
+import $ from 'jquery';
+// import test from 'jsonfile.json';
 
 class App extends Component {
   constructor(props) {
@@ -14,7 +16,8 @@ class App extends Component {
       submitted: false,
       response: '',
       query: '',
-      data: []
+      data: [],
+    //  jsonData: require('jsonfile.json') //(with path)
      };
   }
   componentDidMount(prevProps, prevState, snapshot) {
@@ -73,6 +76,7 @@ class App extends Component {
     console.log('submitted: ' + this.state.inputText)
     this.callApi()
       .then(res => {
+        console.log(res);
         this.setState({resultsFound: true, focused: false, data: this.state.data.concat([{sentiment: this.getDataPoints(), label: this.state.query}]), response: res.express, query: ''})
         setTimeout(()=>{this.setState({submitted: false})}, 1000)
       })
