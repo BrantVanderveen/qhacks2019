@@ -49,6 +49,31 @@ class App extends Component {
     this.setState({ responseToPost: body });
   };
 
+  processResults(res) {
+    var i = 1;
+    var j = 0;
+    var sum = 0;
+    const summary = [];
+    for(i=1;i<=12;i++) {
+      while (j < (Math.floor(res.length/12))*i && !!res[j+1]) {
+        if (!summary[i-1]) {
+          summary[i-1] = {
+            text: res[j].text,
+            avg: 0
+          }
+        }
+        sum += res[j].polarity;
+        if (j+1 === (Math.floor(res.length/12))*i) {
+          summary[i-1].avg = sum/Math.floor(res.length/12);
+          sum = 0;
+        }
+        j++;
+      }
+    }
+    console.log(summary);
+    return(summary)
+  }
+
   addFocus() {
     this.setState({
       focused: true
@@ -77,7 +102,8 @@ class App extends Component {
     this.callApi()
       .then(res => {
         console.log(res);
-        this.setState({resultsFound: true, focused: false, data: this.state.data.concat([{sentiment: this.getDataPoints(), label: this.state.query}]), response: res.express, query: ''})
+        var processed = this.processResults(res);
+        this.setState({resultsFound: true, focused: false, data: this.state.data.concat([{sentiment: processed, label: this.state.query}]), response: res, query: ''})
         setTimeout(()=>{this.setState({submitted: false})}, 1000)
       })
       .catch(err => console.log(err));
@@ -116,18 +142,21 @@ class App extends Component {
     const datasets = this.state.data.map((datapoint, i)=> {
       return {
         label: datapoint.label,
-        data: datapoint.sentiment,
+        data: datapoint.sentiment.map((p)=>p.avg),
         backgroundColor: colors[i].bg,
         borderColor: colors[i].border
       }
     })
     const data= {
-        labels: ["January", "February", "March", "April", "May", "June", "July"],
+        labels: ["February", "March", "April", "May", "June", "July", "August", "September", "November", "December", "January"],
         datasets: datasets
     }
     const options = {
       legend: {
         display: false
+      },
+      tooltips: {
+        enabled: false
       }
     }
     var resultsCSS = "results";
