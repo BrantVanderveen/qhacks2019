@@ -12,8 +12,9 @@ class App extends Component {
       focused: false,
       inputText: '',
       submitted: false,
-      randomData:  [0, (Math.random()*100)-50, (Math.random()*100)-50, (Math.random()*100)-50, (Math.random()*100)-50, (Math.random()*100)-50, (Math.random()*100)-50],
-      response: ''
+      response: '',
+      query: '',
+      data: []
      };
   }
   componentDidMount(prevProps, prevState, snapshot) {
@@ -27,7 +28,7 @@ class App extends Component {
     });
   }
   callApi = async () => {
-    const response = await fetch('/api/hello');
+    const response = await fetch('/api/sentiment');
     const body = await response.json();
     if (response.status !== 200) throw Error(body.message);
     return body;
@@ -58,19 +59,21 @@ class App extends Component {
       })
     }
   }
+  getDataPoints() {
+    return  [0, (Math.random()*100)-50, (Math.random()*100)-50, (Math.random()*100)-50, (Math.random()*100)-50, (Math.random()*100)-50, (Math.random()*100)-50];
+  }
   attemptSubmit() {
-    if(!this.state.inputText) {
+    if(!this.state.inputText || this.state.query) {
       return false;
     }
     this.setState({
-      submitted: true
+      submitted: true,
+      query: this.state.inputText
     })
     console.log('submitted: ' + this.state.inputText)
     this.callApi()
       .then(res => {
-        this.setState({ response: res.express })
-        this.setState({resultsFound: true, focused: false, randomData:  [0, (Math.random()*100)-50, (Math.random()*100)-50, (Math.random()*100)-50, (Math.random()*100)-50, (Math.random()*100)-50, (Math.random()*100)-50]})
-
+        this.setState({resultsFound: true, focused: false, data: this.state.data.concat([{sentiment: this.getDataPoints(), label: this.state.query}]), response: res.express, query: ''})
         setTimeout(()=>{this.setState({submitted: false})}, 1000)
       })
       .catch(err => console.log(err));
@@ -92,13 +95,31 @@ class App extends Component {
         transition: 0.5s;
       `;
     }
+    const colors = [
+      {
+        border: 'rgba(66, 244, 66, 1)',
+        bg: 'rgba(66, 244, 66, 0.3)'
+      },
+      {
+        border: 'rgba(204, 93, 24, 1)',
+        bg: 'rgba(204, 93, 24, 0.3)'
+      },
+      {
+        border: 'rgb(25, 22, 186)',
+        bg: 'rgba(25, 22, 186, 0.3)'
+      }
+    ];
+    const datasets = this.state.data.map((datapoint, i)=> {
+      return {
+        label: datapoint.label,
+        data: datapoint.sentiment,
+        backgroundColor: colors[i].bg,
+        borderColor: colors[i].border
+      }
+    })
     const data= {
         labels: ["January", "February", "March", "April", "May", "June", "July"],
-        datasets: [{
-        backgroundColor: 'rgba(66, 244, 66, 0.3)',
-        borderColor: 'rgb(66, 244, 66)',
-        data: this.state.randomData,
-        }]
+        datasets: datasets
     }
     const options = {
       legend: {
