@@ -3,6 +3,7 @@ import json
 import pandas as pd
 
 #print(os.getcwd())
+os.chdir("..")
 os.chdir("../Data/tweet")
 
 #print(os.getcwd())
